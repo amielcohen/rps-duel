@@ -1,0 +1,86 @@
+import type { Card } from "../types/Card";
+
+export const starterDeck: Card[] = [
+  {
+    id: "rock-1",
+    name: "Rock",
+    type: "rock",
+    cost: 0,
+    rarity: "common",
+    effects: [],
+  },
+  {
+    id: "rock-2",
+    name: "Rock",
+    type: "rock",
+    cost: 0,
+    rarity: "common",
+    effects: [],
+  },
+  {
+    id: "rock-3",
+    name: "Rock",
+    type: "rock",
+    cost: 0,
+    rarity: "common",
+    effects: [],
+  },
+
+  {
+    id: "paper-1",
+    name: "Paper",
+    type: "paper",
+    cost: 0,
+    rarity: "common",
+    effects: [],
+  },
+  {
+    id: "paper-2",
+    name: "Paper",
+    type: "paper",
+    cost: 0,
+    rarity: "common",
+    effects: [],
+  },
+  {
+    id: "paper-3",
+    name: "Paper",
+    type: "paper",
+    cost: 0,
+    rarity: "common",
+    effects: [],
+  },
+
+  {
+    id: "scissors-1",
+    name: "Scissors",
+    type: "scissors",
+    cost: 0,
+    rarity: "common",
+    effects: [],
+  },
+  {
+    id: "scissors-2",
+    name: "Scissors",
+    type: "scissors",
+    cost: 0,
+    rarity: "common",
+    effects: [],
+},
+  {
+    id: "scissors-3",
+    name: "Scissors",
+    type: "scissors",
+    cost: 0,
+    rarity: "common",
+    effects: [],
+  },
+  {
+    id: "scissors-4",
+    name: "Scissors",
+    type: "scissors",
+    cost: 0,
+    rarity: "common",
+    effects: [],
+  },
+];
