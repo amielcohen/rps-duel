@@ -25,6 +25,18 @@ jobs:
       - name: Install dependencies
         working-directory: ./frontend
         run: npm ci --include=dev
+      
+        
+      - name: Debug dependencies
+        working-directory: ./frontend
+        run: |
+          pwd
+          node -v
+          npm -v
+          ls
+          cat package.json
+          npm list vitest
+          ls node_modules/.bin  
 
       - name: Run tests
         working-directory: ./frontend
