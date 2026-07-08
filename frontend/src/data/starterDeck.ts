@@ -14,7 +14,7 @@ export const starterDeck: Card[] = [
     name: "Rock",
     type: "rock",
     cost: 0,
-    rarity: "common",
+    rarity: "rare",
     effects: [],
   },
   {
