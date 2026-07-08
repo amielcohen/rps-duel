@@ -1,0 +1,401 @@
+/* --- לוח משחק מודרני --- */
+.game-board {
+  height: 100vh; 
+  max-height: 100vh;
+  overflow: hidden; 
+  padding: 12px 16px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; 
+  background: 
+    radial-gradient(circle at 50% 0%, rgba(124, 58, 237, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 50% 100%, rgba(37, 99, 235, 0.06) 0%, transparent 50%),
+    #0b0b14;
+  color: #f3f4f6;
+  font-family: 'Inter', system-ui, sans-serif;
+  user-select: none;
+  position: relative;
+}
+
+/* כותרת עליונה */
+.game-board__header {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 6px;
+  flex-shrink: 0;
+}
+
+.game-board__title-zone h1 {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, #fff 30%, #a78bfa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.game-board__title-zone p { margin: 0; color: #475569; font-size: 0.75rem; }
+
+.game-board__start-button {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: white;
+  background: linear-gradient(135deg, #4f46e5, #2563eb);
+  cursor: pointer;
+}
+
+/* לוח תוצאות מהודק משולב עם לחצני Discard */
+.game-board__score-panel {
+  width: 100%;
+  max-width: 800px;
+  margin: 4px auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.game-board__score-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 90px 1fr;
+  gap: 12px;
+  align-items: center;
+  flex-grow: 1;
+  max-width: 450px;
+}
+
+.game-board__score-card, .game-board__round {
+  padding: 6px;
+  border-radius: 8px;
+  text-align: center;
+  background: rgba(30, 30, 45, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.game-board__score-card strong, .game-board__round strong { display: block; font-size: 1.25rem; font-weight: 800; }
+.player-badge { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; color: #64748b; }
+.game-board__score-card--player strong { color: #3b82f6; }
+.game-board__score-card--computer strong { color: #ef4444; }
+.game-board__round strong { color: #f59e0b; }
+
+/* כפתורי הפעלת Discard Pile */
+.discard-trigger-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.8rem;
+  transition: all 0.2s;
+}
+.discard-trigger-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+/* --- זירת הקרב המרכזית --- */
+.game-board__arena {
+  width: 100%;
+  max-width: 900px;
+  margin: auto auto;
+  display: grid;
+  grid-template-columns: 1fr 160px 1fr;
+  gap: 16px;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.side-label { margin: 0 0 6px; font-size: 0.75rem; text-transform: uppercase; color: #475569; font-weight: 700; text-align: center; }
+
+/* עטיפת קלפי הזירה במחשב */
+.arena-card-wrapper {
+  position: relative;
+  width: 185px;  
+  height: 265px; 
+  border-radius: 14px;
+  margin: 0 auto;
+}
+
+.game-board__card-placeholder {
+  width: 185px;
+  height: 265px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  color: #334155;
+  font-weight: 600;
+  font-size: 0.85rem;
+  border: 2px dashed rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.01);
+}
+
+/* מרכז הזירה - VS */
+.game-board__versus { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.versus-circle { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; font-size: 1rem; font-weight: 900; background: #1e1e2f; border: 2px solid rgba(255, 255, 255, 0.08); color: #475569; }
+
+.game-board__result-banner { padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 800; text-align: center; }
+.game-board__result-banner.playerOne { background: #15803d; color: #fff; border: 1px solid #22c55e; }
+.game-board__result-banner.playerTwo { background: #b91c1c; color: #fff; border: 1px solid #ef4444; }
+.game-board__result-banner.draw { background: #475569; color: #fff; border: 1px solid #94a3b8; }
+
+/* שכבות הסטטוס בזירה במחשב */
+.battle-status-overlay {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 900;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 20;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.arena-card--winner .arena-card-wrapper { animation: winnerGlow 1.5s ease-in-out infinite alternate; }
+.arena-card--winner .status-win { opacity: 1; background: rgba(34, 197, 94, 0.1); color: #22c55e; border: 3px solid #22c55e; text-shadow: 0 0 10px rgba(34,197,94,0.8); }
+.arena-card--loser .arena-card-wrapper { transform: scale(0.96); }
+.arena-card--loser .status-lose { opacity: 1; background: rgba(0, 0, 0, 0.65); color: #ef4444; border: 3px solid #ef4444; text-shadow: 0 0 10px rgba(239, 68, 68, 0.9); }
+.arena-card--draw .status-draw { opacity: 1; background: rgba(0,0,0,0.5); color: #94a3b8; border: 4px dashed #94a3b8; }
+
+@keyframes winnerGlow {
+  0% { box-shadow: 0 0 10px rgba(34, 197, 94, 0.2); }
+  100% { box-shadow: 0 0 20px rgba(34, 197, 94, 0.5); }
+}
+
+/* --- אזור היד (Your Hand) --- */
+.game-board__hand {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  border-top: 1px dashed rgba(255, 255, 255, 0.04);
+  padding-top: 8px;
+  flex-shrink: 0; 
+}
+
+.game-board__hand-cards {
+  display: flex;
+  justify-content: center;
+  gap: 20px; 
+  padding: 10px 0 20px 0; 
+  overflow: visible !important; 
+}
+
+.hand-card-slot {
+  position: relative;
+  width: 135px;  
+  height: 195px; 
+  overflow: visible !important;
+  z-index: 1;
+}
+.hand-card-slot:hover { z-index: 100; }
+
+.hand-card-slot:hover .card-view {
+  transform: translateY(-50px) scale(1.5); 
+  transform-origin: bottom center;
+  z-index: 9999 !important;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.95), 0 0 25px rgba(255, 255, 255, 0.1);
+  border-color: #fff !important;
+}
+
+/* ========================================== */
+/*           חלונית צפייה ב-DISCARD           */
+/* ========================================== */
+/* --- עדכון חלונית צפייה ב-Discard Pile (קלפים מוקטנים) --- */
+.discard-modal-overlay {
+  position: fixed; /* שינוי ל-fixed כדי שינעל את כל המסך */
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(5, 5, 10, 0.85);
+  backdrop-filter: blur(8px);
+  display: grid;
+  place-items: center;
+  z-index: 999999;
+  animation: fadeIn 0.2s ease;
+}
+
+.discard-modal {
+  background: linear-gradient(135deg, #161624 0%, #0d0d15 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  width: 90%;
+  max-width: 650px; /* הרחבנו את התיבה כדי שייכנסו מספר קלפים בשורה */
+  height: 75vh;
+  max-height: 550px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+}
+
+.discard-modal__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.discard-modal__header h3 { margin: 0; font-size: 1.2rem; font-weight: 800; color: #a78bfa; letter-spacing: 0.5px; }
+.discard-modal__close { background: none; border: none; color: #475569; font-size: 1.4rem; cursor: pointer; transition: color 0.2s; }
+.discard-modal__close:hover { color: #ef4444; }
+
+.discard-modal__content {
+  padding: 24px;
+  overflow-y: auto; /* מאפשר לגלול בתוך רשימת הקלפים המשוחקים */
+  flex-grow: 1;
+}
+
+.discard-empty-text { text-align: center; color: #475569; font-style: italic; margin-top: 40px; }
+
+/* גריד קלפים משגע ומקצועי (מסתדר אוטומטית לפי המקום) */
+.discard-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* מסדר קלפים קטנים בשורות */
+  gap: 20px;
+  justify-items: center;
+  padding-bottom: 20px;
+}
+
+/* פריט קלף בודד בתוך רשימת המבוטלים */
+.discard-card-item {
+  transition: transform 0.2s ease;
+}
+
+/* אפקט ריחוף קל גם בתוך ה-Discard למראה פרימיום */
+.discard-card-item:hover {
+  transform: translateY(-5px) scale(1.05);
+  z-index: 10;
+}
+
+/* התאמות מובייל לגריד הקלפים */
+@media (max-width: 480px) {
+  .discard-modal {
+    width: 95%;
+    height: 85vh;
+  }
+  .discard-modal__content {
+    padding: 14px;
+  }
+  .discard-cards-grid {
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 12px;
+  }
+}
+
+/* מסך סיום משחק */
+.game-board__overlay-winner {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(7, 7, 12, 0.85);
+  backdrop-filter: blur(10px);
+  display: grid;
+  place-items: center;
+  z-index: 99999;
+}
+.winner-modal {
+  text-align: center;
+  background: linear-gradient(135deg, #1e1e2f 0%, #11111a 100%);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  padding: 40px;
+  border-radius: 24px;
+  max-width: 400px;
+  width: 85%;
+}
+.winner-modal h2 { margin: 0; font-size: 1.2rem; font-weight: 700; color: #94a3b8; -webkit-text-stroke: 2px black;}
+.winner-modal__icon { font-size: 4rem; }
+.winner-modal__title { font-size: 2rem; font-weight: 900; margin: 12px 0 24px 0; }
+.winner-modal__title.playerOne { color: #22c55e; }
+.winner-modal__title.playerTwo { color: #ef4444; }
+.winner-modal__title.draw { color: #94a3b8; }
+.winner-modal__restart-button { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; border: none; border-radius: 12px; padding: 14px 32px; font-size: 1.1rem; font-weight: 800; cursor: pointer; }
+
+
+/* ========================================== */
+/*    🚨 התיקון המוחלט והרספונסיבי למובייל 🚨  */
+/* ========================================== */
+
+@media (max-width: 768px) {
+  .game-board {
+    height: auto; /* מאפשרים למסך לגדול ולגלוש קצת במידת הצורך במקום להיחתך */
+    min-height: 100vh;
+    max-height: none;
+    overflow-y: auto; /* מאפשרים גלילה טבעית ורכה במובייל */
+    padding: 10px;
+    gap: 20px;
+  }
+
+  .game-board__score-panel {
+    flex-direction: row; /* כפתורי ה-Discard והניקוד יושבים בשורה נוחה */
+    width: 100%;
+    justify-content: space-between;
+    gap: 4px;
+  }
+  .discard-trigger-btn {
+    padding: 6px 8px;
+    font-size: 0.7rem;
+  }
+  .game-board__score-wrapper {
+    grid-template-columns: 1fr 75px 1fr;
+    gap: 6px;
+  }
+
+  /* פריסת זירה אנכית ומרווחת במובייל */
+  .game-board__arena {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 16px;
+  }
+  .game-board__versus {
+    grid-row: 2;
+  }
+
+  /* סנכרון מוחלט של קלפי הזירה במובייל (תואם בול למידות ה-CSS של הריאקט) */
+  .arena-card-wrapper, 
+  .game-board__card-placeholder,
+  .arena-card-wrapper .card-view {
+    width: 135px !important;  /* שינוי קריטי: מידות קבועות ותואמות */
+    height: 195px !important; /* משתמש במידות הנייטיב של ה-Hand כדי לא לעוות את ה-Overlay */
+  }
+  
+  /* סידור מיקום האפקטים של הזירה במובייל כך שיתאימו לקלף בדיוק של פיקסל */
+  .battle-status-overlay {
+    width: 135px;
+    height: 195px;
+    font-size: 1.3rem;
+  }
+
+  /* סידור היד במובייל - פותר את הדחיסות והחפיפה! */
+  .game-board__hand-cards {
+    display: flex;
+    flex-wrap: wrap; /* במקום להידחף, אם אין מקום הקלפים ירדו שורה בצורה אסתטית */
+    justify-content: center;
+    gap: 16px; /* מרווח נדיב שלא ירכבו אחד על השני */
+    padding: 10px 0 40px 0;
+  }
+
+  /* גודל הסלוט של קלפי היד במובייל */
+  .hand-card-slot {
+    width: 135px;  /* הגודל הנייטיבי המדויק של הקלף */
+    height: 195px;
+  }
+
+  /* מניעת עיוותים בזום במובייל */
+  .hand-card-slot:hover .card-view, 
+  .hand-card-slot:active .card-view {
+    transform: translateY(-30px) scale(1.25); /* זום מעט מתון יותר למובייל כדי שלא יברח מהמסך */
+  }
+}
